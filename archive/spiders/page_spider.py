@@ -23,7 +23,7 @@ class PageSpider(CrawlSpider):
         self.rules = (
             Rule(SgmlLinkExtractor(
                     allow=(r'.*/http://%s/.*' % self.config.get('target', 'domain').replace('.', '\.')),
-                    deny_extensions='',
+                    deny_extensions='', # http://www.haogongju.net/art/1690534
                     tags=('a', 'area', 'link', 'script', 'img'),
                     attrs=('href', 'src'),
                     ),

@@ -44,4 +44,4 @@ def _regular_expression_escape(s):
 
 def _replace_url(content):
     config = _get_config()
-    return re.sub(r"/web/.*/", '', content)
+    return re.sub(r'/web/[0123456789imcs_\*]*/', '', content)
