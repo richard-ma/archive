@@ -5,7 +5,7 @@
 
 from scrapy.item import Item, Field
 
-class ArchiveItem(Item):
+class PageItem(Item):
     # define the fields for your item here like:
     # name = Field()
     url = Field()
