@@ -5,6 +5,7 @@
 
 import os
 import re
+from ConfigParser import ConfigParser
 
 class PagePipeline(object):
     def process_item(self, item, spider):
@@ -21,12 +22,26 @@ class PagePipeline(object):
             os.mkdir(dir_path)
 
         fd = open(full_filename, 'a')
-        content = str(item['content'])
+        content = _replace_url(str(item['content']))
         fd.write(content)
         fd.close()
 
         return item
 
+def _get_config():
+    config = ConfigParser()
+    config.read('./configrations.ini')
+    return config
+
 def _get_real_path(path):
-    real_path = re.findall(r"http://web\.archive\.org/.*/http://mobilezonegt\.com(.*)", path)
+    config = _get_config()
+    r = r"http://web\.archive\.org/.*/http://%s(.*)" % _regular_expression_escape(config.get('target', 'domain'))
+    real_path = re.findall(r, path)
     return real_path
+
+def _regular_expression_escape(s):
+    return s.replace('.', '\.')
+
+def _replace_url(content):
+    config = _get_config()
+    return re.sub(r"/web/.*/", '', content)

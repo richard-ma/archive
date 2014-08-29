@@ -21,9 +21,15 @@ class PageSpider(CrawlSpider):
             "http://web.archive.org/web/20120114003207/http://%s/" % self.config.get('target', 'domain'),
             ]
         self.rules = (
-            Rule(SgmlLinkExtractor(allow=(r'.*/http://%s/.*' % self.config.get('target', 'domain').replace('.', '\.'))),
+            Rule(SgmlLinkExtractor(
+                    allow=(r'.*/http://%s/.*' % self.config.get('target', 'domain').replace('.', '\.')),
+                    deny_extensions='',
+                    tags=('a', 'area', 'link', 'script', 'img'),
+                    attrs=('href', 'src'),
+                    ),
                 callback='parse_item',
-                follow=True),
+                follow=True,
+                ),
             )
 
         # call Crawlspider.__init__ to init a real spider
