@@ -9,4 +9,4 @@ class ArchiveItem(Item):
     # define the fields for your item here like:
     # name = Field()
     url = Field()
-    body = Field()
+    content = Field()
