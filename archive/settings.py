@@ -13,3 +13,6 @@ SPIDER_MODULES = ['archive.spiders']
 NEWSPIDER_MODULE = 'archive.spiders'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
+ITEM_PIPELINES = [
+        'archive.pipelines.PagePipeline',
+        ]

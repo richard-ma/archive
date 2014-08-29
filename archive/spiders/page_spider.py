@@ -4,26 +4,32 @@ from scrapy.selector import HtmlXPathSelector
 
 from archive.items import PageItem
 
-class PageSpider(CrawlSpider):
-    name = "page"
-    allowed_domains = ["web.archive.org"]
-    #allowed_domains = ["mobilezonegt.com"]
-    start_urls = [
-            "http://web.archive.org/web/20120114003207/http://mobilezonegt.com/",
-            #"http://mobilezonegt.com/"
-            ]
+from ConfigParser import ConfigParser
 
-    rules = (
-            #Rule(SgmlLinkExtractor(allow=(r'.*')),
-                #callback='parse_item',
-                #follow=True),
-            Rule(SgmlLinkExtractor(allow=(r'.*/http://mobilezonegt\.com/.*')),
+class PageSpider(CrawlSpider):
+    config = ConfigParser()
+
+    name = "page"
+
+    def __init__(self):
+
+        # init spider
+        self.config.read('./configrations.ini')
+
+        self.allowed_domains = ["web.archive.org"]
+        self.start_urls = [
+            "http://web.archive.org/web/20120114003207/http://%s/" % self.config.get('target', 'domain'),
+            ]
+        self.rules = (
+            Rule(SgmlLinkExtractor(allow=(r'.*/http://%s/.*' % self.config.get('target', 'domain').replace('.', '\.'))),
                 callback='parse_item',
                 follow=True),
             )
 
+        # call Crawlspider.__init__ to init a real spider
+        CrawlSpider.__init__(self)
+
     def parse_item(self, response):
-        #hxs = HtmlXPathSelector(response)
         item = PageItem()
         item['url'] = response.url
         item['content'] = response.body
