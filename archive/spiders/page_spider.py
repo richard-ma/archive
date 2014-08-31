@@ -18,7 +18,7 @@ class PageSpider(CrawlSpider):
 
         self.allowed_domains = ["web.archive.org"]
         self.start_urls = [
-            "http://web.archive.org/web/20120114003207/http://%s/" % self.config.get('target', 'domain'),
+            self.config.get('target', 'startUrl'),
             ]
         self.rules = (
             Rule(SgmlLinkExtractor(
