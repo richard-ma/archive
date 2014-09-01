@@ -19,7 +19,7 @@ class PagePipeline(object):
 
         dir_path = os.path.dirname(full_filename)
         if not os.path.exists(dir_path):
-            os.mkdir(dir_path)
+            os.mkdirs(dir_path)
 
         fd = open(full_filename, 'a')
         content = _replace_url(str(item['content']))
