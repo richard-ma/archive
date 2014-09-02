@@ -7,11 +7,11 @@
 #
 
 BOT_NAME = 'archive'
-BOT_VERSION = '1.0'
+#BOT_VERSION = '1.0'
 
 SPIDER_MODULES = ['archive.spiders']
 NEWSPIDER_MODULE = 'archive.spiders'
-USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
+USER_AGENT = '%s' % (BOT_NAME)
 
 ITEM_PIPELINES = [
         'archive.pipelines.PagePipeline',
