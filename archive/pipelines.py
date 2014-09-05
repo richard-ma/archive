@@ -9,7 +9,8 @@ from ConfigParser import ConfigParser
 
 class PagePipeline(object):
     def process_item(self, item, spider):
-        data_path = './data'
+        config = _get_config()
+        data_path = config.get('storage', 'path')
 
         url = _get_real_path(item['url'])[0]
 

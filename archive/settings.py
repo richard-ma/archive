@@ -16,3 +16,9 @@ USER_AGENT = '%s' % (BOT_NAME)
 ITEM_PIPELINES = [
         'archive.pipelines.PagePipeline',
         ]
+
+LOG_ENABLED = True
+LOG_ENCODING = 'utf-8'
+LOG_FILE = './error.log'
+LOG_LEVEL = 'ERROR'
+LOG_STDOUT = True
