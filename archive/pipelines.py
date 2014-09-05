@@ -6,17 +6,29 @@
 import os
 import re
 from ConfigParser import ConfigParser
+from scrapy import log
 
 class PagePipeline(object):
     def process_item(self, item, spider):
         config = _get_config()
         data_path = config.get('storage', 'path')
 
-        url = _get_real_path(item['url'])[0]
+        url = _get_real_path(item['url'])
 
-        full_filename = data_path + url
-        if os.path.isdir(full_filename):
-            full_filename = full_filename + 'index.html'
+        path_array = url.split('/')
+        log.msg(path_array, level = log.DEBUG)
+
+        full_filename = ''
+        if '?' in path_array[-1]: # have params
+            url.replace('?=&', '-') # replace ?=& to -
+            full_filename = data_path + url
+        else:
+            if '.' in path_array[-1]: # filename
+              full_filename = data_path + url
+            else: # static url
+                if url[-1] != '/': # not have tail '/'
+                    url = url + '/' # add tail '/'
+                full_filename = data_path + url + 'index.html' # /index.html
 
         dir_path = os.path.dirname(full_filename)
         if not os.path.exists(dir_path):
@@ -38,7 +50,7 @@ def _get_real_path(path):
     config = _get_config()
     r = r"http://web\.archive\.org/.*/http://%s(.*)" % _regular_expression_escape(config.get('target', 'domain'))
     real_path = re.findall(r, path)
-    return real_path
+    return real_path[0]
 
 def _regular_expression_escape(s):
     return s.replace('.', '\.')
