@@ -6,7 +6,6 @@
 import os
 import re
 from ConfigParser import ConfigParser
-from scrapy import log
 
 class PagePipeline(object):
     def process_item(self, item, spider):
@@ -16,11 +15,14 @@ class PagePipeline(object):
         url = _get_real_path(item['url'])
 
         path_array = url.split('/')
-        log.msg(path_array, level = log.DEBUG)
 
         full_filename = ''
         if '?' in path_array[-1]: # have params
-            url.replace('?=&', '-') # replace ?=& to -
+            # replace ?=& to -
+            url = url.replace('?', '-')
+            url = url.replace('=', '-')
+            url = url.replace('&', '-')
+
             full_filename = data_path + url
         else:
             if '.' in path_array[-1]: # filename
