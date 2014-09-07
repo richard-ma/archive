@@ -13,12 +13,12 @@ SPIDER_MODULES = ['archive.spiders']
 NEWSPIDER_MODULE = 'archive.spiders'
 USER_AGENT = '%s' % (BOT_NAME)
 
-ITEM_PIPELINES = [
-        'archive.pipelines.PagePipeline',
-        ]
+ITEM_PIPELINES = {
+        'archive.pipelines.PagePipeline': 1000,
+        }
 
-LOG_ENABLED = True
-LOG_ENCODING = 'utf-8'
-LOG_FILE = './error.log'
-LOG_LEVEL = 'ERROR'
-LOG_STDOUT = True
+#LOG_ENABLED = True
+#LOG_ENCODING = 'utf-8'
+#LOG_FILE = './error.log'
+#LOG_LEVEL = 'ERROR'
+#LOG_STDOUT = True
