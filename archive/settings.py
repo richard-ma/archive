@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = 'archive.spiders'
 USER_AGENT = '%s' % (BOT_NAME)
 
 ITEM_PIPELINES = {
-        'archive.pipelines.PagePipeline': 1000,
+        #'archive.pipelines.PagePipeline': 1000,
         }
 
 #LOG_ENABLED = True
