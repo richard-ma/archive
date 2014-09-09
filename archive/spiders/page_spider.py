@@ -49,6 +49,7 @@ class PageSpider(CrawlSpider):
         url = _get_real_path(item['url'])
         # can not find real path of a link
         if url == None:
+            log.msg('!! Cannot find real path', _level=log.ERROR)
             return item
 
         path_array = url.split('/')
@@ -89,7 +90,7 @@ def _get_real_path(path):
     config = _get_config()
     r = r"http://web\.archive\.org/.*/http://%s(.*)" % _regular_expression_escape(config.get('target', 'domain'))
     real_path = re.findall(r, path)
-    if real_path.count() < 1:
+    if len(real_path) < 1:
         return None
     else:
         return real_path[0]
