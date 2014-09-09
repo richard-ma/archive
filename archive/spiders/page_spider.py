@@ -1,6 +1,7 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
+from scrapy import log
 
 from archive.items import PageItem
 
@@ -46,6 +47,9 @@ class PageSpider(CrawlSpider):
         data_path = config.get('storage', 'path')
 
         url = _get_real_path(item['url'])
+        # can not find real path of a link
+        if url == None:
+            return item
 
         path_array = url.split('/')
 
@@ -85,12 +89,39 @@ def _get_real_path(path):
     config = _get_config()
     r = r"http://web\.archive\.org/.*/http://%s(.*)" % _regular_expression_escape(config.get('target', 'domain'))
     real_path = re.findall(r, path)
-    return real_path[0]
+    if real_path.count() < 1:
+        return None
+    else:
+        return real_path[0]
 
 def _regular_expression_escape(s):
     return s.replace('.', '\.')
 
 def _replace_url(content):
     config = _get_config()
+    links = re.findall(r'/web/[0123456789imcs_\*]*/[^\'\"]*', content)
+    for link in links:
+        newLink = _new_link(link)
+        #log.msg('!!!!NewLink: %s' % re.escape(newLink))
+        re.sub(re.escape(link), newLink, content)
     content = re.sub(r'/web/[0123456789imcs_\*]*/', '', content)
     return content
+
+def _new_link(url):
+    # split url into array through '/'
+    path_array = url.split('/')
+
+    if '?' in path_array[-1]: # have params
+        # replace ?=& to -
+        url = url.replace('?', '-')
+        url = url.replace('=', '-')
+        url = url.replace('&', '-')
+    else:
+        if '.' in path_array[-1]: # filename
+            pass
+        else: # static url
+            if url[-1] != '/': # not have tail '/'
+                url = url + '/' # add tail '/'
+            url = url + 'index.html' # /index.html
+
+    return url
